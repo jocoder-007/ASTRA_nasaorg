@@ -15,31 +15,160 @@ function startTraining() {
 
 /* =========================================
    EVA SUIT DIAGNOSTICS - TRAINING SIMULATION
-   These checks are educational UI states only.
-   They are not real sensor readings or suit controls.
+   Values below are game indicators only. They are not real
+   spacesuit sensor readings, engineering limits, or suit controls.
 ========================================= */
 
 const suitDiagnosticSystems = [
-    { stateId: "oxygenState", barId: "oxygenBar", name: "OXYGEN SUPPLY" },
-    { stateId: "pressureState", barId: "pressureBar", name: "SUIT PRESSURE" },
-    { stateId: "coolingState", barId: "coolingBar", name: "COOLING LOOP" },
-    { stateId: "co2State", barId: "co2Bar", name: "CO₂ REMOVAL" },
-    { stateId: "commsState", barId: "commsBar", name: "RADIO COMMUNICATION" }
+    {
+        stateId: "oxygenState",
+        barId: "oxygenBar",
+        name: "OXYGEN SUPPLY",
+        initialValue: 94,
+        metric: "OXYGEN RESERVE"
+    },
+    {
+        stateId: "pressureState",
+        barId: "pressureBar",
+        name: "SUIT PRESSURE",
+        initialValue: 98,
+        metric: "PRESSURE STABILITY"
+    },
+    {
+        stateId: "coolingState",
+        barId: "coolingBar",
+        name: "COOLING LOOP",
+        initialValue: 93,
+        metric: "COOLING PERFORMANCE"
+    },
+    {
+        stateId: "co2State",
+        barId: "co2Bar",
+        name: "CO₂ REMOVAL",
+        initialValue: 97,
+        metric: "CO₂ REMOVAL PERFORMANCE"
+    },
+    {
+        stateId: "commsState",
+        barId: "commsBar",
+        name: "RADIO COMMUNICATION",
+        initialValue: 95,
+        metric: "RADIO LINK QUALITY"
+    }
 ];
 
 let suitDiagnosticTimers = [];
+let suitTelemetryInterval = null;
+let suitTelemetryElapsed = 0;
 
 function clearSuitDiagnosticTimers() {
-    suitDiagnosticTimers.forEach(function(timerId) {
+    suitDiagnosticTimers.forEach(function (timerId) {
         clearTimeout(timerId);
     });
     suitDiagnosticTimers = [];
 }
 
+function stopSuitTelemetrySimulation() {
+    if (suitTelemetryInterval !== null) {
+        clearInterval(suitTelemetryInterval);
+        suitTelemetryInterval = null;
+    }
+}
+
+function clearSuitSimulation() {
+    stopSuitTelemetrySimulation();
+    suitTelemetryElapsed = 0;
+}
+
+function getSuitTelemetryValue(system, elapsedSeconds) {
+    // These deliberately simplified values create a changing training display.
+    // They are not measured physical quantities or real suit specifications.
+    switch (system.stateId) {
+        case "oxygenState":
+            // Simulated oxygen reserve slowly decreases during the EVA exercise.
+            return Math.max(35, system.initialValue - elapsedSeconds * 0.075);
+
+        case "pressureState":
+            // A stable normalized indicator with very small visual variation.
+            return 98 + Math.sin(elapsedSeconds / 8) * 0.7;
+
+        case "coolingState":
+            // Cooling performance varies gently with the simulated thermal load.
+            return 93 + Math.sin(elapsedSeconds / 5.5) * 2.4;
+
+        case "co2State":
+            // CO2 removal performance varies slightly during the exercise.
+            return 97 + Math.sin(elapsedSeconds / 7.2) * 1.4;
+
+        case "commsState":
+            // Radio link quality fluctuates slightly in the training scenario.
+            return 95 + Math.sin(elapsedSeconds / 4.5) * 3;
+
+        default:
+            return system.initialValue;
+    }
+}
+
+function displaySuitTelemetry(system, rawValue) {
+    const state = document.getElementById(system.stateId);
+    const bar = document.getElementById(system.barId);
+    if (!state || !bar) return;
+
+    const value = Math.max(0, Math.min(100, rawValue));
+    let label = "NOMINAL";
+    let stateClass = "nominal";
+
+    if (system.stateId === "oxygenState" && value < 70) {
+        label = value < 45 ? "LOW RESERVE" : "MONITOR";
+        stateClass = "checking";
+    } else if (system.stateId !== "oxygenState" && value < 85) {
+        label = "MONITOR";
+        stateClass = "checking";
+    }
+
+    bar.style.width = value.toFixed(0) + "%";
+    state.innerText = label + " · SIM " + value.toFixed(0) + "%";
+    state.className = "telemetry-state " + stateClass;
+}
+
+function updateSuitTelemetrySimulation() {
+    suitTelemetryElapsed += 1;
+
+    suitDiagnosticSystems.forEach(function (system) {
+        const value = getSuitTelemetryValue(system, suitTelemetryElapsed);
+        displaySuitTelemetry(system, value);
+    });
+
+    const result = document.getElementById("diagnosticResult");
+    const oxygenValue = getSuitTelemetryValue(
+        suitDiagnosticSystems[0],
+        suitTelemetryElapsed
+    );
+
+    if (result && oxygenValue < 70) {
+        result.innerText =
+            "TRAINING ALERT: simulated oxygen reserve is decreasing. Review the EVA status.";
+    } else if (result) {
+        result.innerText =
+            "SIMULATED EVA TELEMETRY ACTIVE — INDICATORS ARE FOR TRAINING ONLY";
+    }
+}
+
+function startSuitTelemetrySimulation() {
+    stopSuitTelemetrySimulation();
+    suitTelemetryElapsed = 0;
+
+    // Refresh the indicators once per second while the monitor is active.
+    suitTelemetryInterval = window.setInterval(function () {
+        updateSuitTelemetrySimulation();
+    }, 1000);
+}
+
 function resetSuitDiagnostics() {
     clearSuitDiagnosticTimers();
+    clearSuitSimulation();
 
-    suitDiagnosticSystems.forEach(function(system) {
+    suitDiagnosticSystems.forEach(function (system) {
         const state = document.getElementById(system.stateId);
         const bar = document.getElementById(system.barId);
         if (!state || !bar) return;
@@ -52,8 +181,10 @@ function resetSuitDiagnostics() {
     const result = document.getElementById("diagnosticResult");
     const button = document.getElementById("runDiagnosticsButton");
     const assessmentButton = document.getElementById("flightAssessmentButton");
+
     if (assessmentButton) assessmentButton.hidden = true;
     if (result) result.innerText = "SYSTEM CHECK NOT STARTED";
+
     if (button) {
         button.disabled = false;
         button.innerText = "RUN SUIT DIAGNOSTICS →";
@@ -70,8 +201,8 @@ function runSuitDiagnostics() {
     button.innerText = "DIAGNOSTICS RUNNING...";
     result.innerText = "CHECKING SUIT SUPPORT SYSTEMS...";
 
-    suitDiagnosticSystems.forEach(function(system, index) {
-        const timerId = setTimeout(function() {
+    suitDiagnosticSystems.forEach(function (system, index) {
+        const timerId = window.setTimeout(function () {
             const state = document.getElementById(system.stateId);
             const bar = document.getElementById(system.barId);
             if (!state || !bar) return;
@@ -79,19 +210,28 @@ function runSuitDiagnostics() {
             state.innerText = "CHECKING";
             state.className = "telemetry-state checking";
 
-            const completionTimer = setTimeout(function() {
-                state.innerText = "NOMINAL";
-                state.className = "telemetry-state nominal";
-                bar.style.width = "100%";
+            const completionTimer = window.setTimeout(function () {
+                // Each system begins with its own simulated baseline,
+                // rather than every meter being set to 100%.
+                displaySuitTelemetry(system, system.initialValue);
 
                 if (index === suitDiagnosticSystems.length - 1) {
-                    result.innerText = "ALL FIVE TRAINING CHECKS COMPLETE — SIMULATED READY STATE";
+                    result.innerText =
+                        "ALL FIVE CHECKS COMPLETE — STARTING SIMULATED EVA TELEMETRY";
                     button.disabled = false;
-                    button.innerText = "RUN AGAIN →";
-                    const assessmentButton = document.getElementById("flightAssessmentButton");
+                    button.innerText = "RUN DIAGNOSTICS AGAIN →";
+
+                    const assessmentButton =
+                        document.getElementById("flightAssessmentButton");
                     if (assessmentButton) assessmentButton.hidden = false;
-                    document.getElementById("missionMessage").innerText =
-                        "EVA suit training diagnostics completed. The Flight Systems knowledge assessment is unlocked.";
+
+                    const missionMessage = document.getElementById("missionMessage");
+                    if (missionMessage) {
+                        missionMessage.innerText =
+                            "EVA suit training diagnostics completed. The Flight Systems knowledge assessment is unlocked.";
+                    }
+
+                    startSuitTelemetrySimulation();
                 }
             }, 400);
 
@@ -128,7 +268,7 @@ const flightQuestions = [
 
         options: [
             "Planetary Landing Safety System",
-            "Primary Life Support System",
+            "Portable Life Support System",
             "Personal Lunar Science Station",
             "Pressure Launch Support System"
         ],
@@ -136,7 +276,7 @@ const flightQuestions = [
         answer: 1,
 
         explanation:
-        "The Primary Life Support System helps provide oxygen, remove carbon dioxide and control suit temperature."
+        "The Portable Life Support System (PLSS) supports the spacesuit by supplying oxygen, removing carbon dioxide, circulating cooling water and supporting communications."
     },
 
     {
@@ -187,6 +327,10 @@ let showingResults = false;
 
 
 function openMission(missionName) {
+
+    // Stop EVA checks and telemetry when switching to another module.
+    clearSuitDiagnosticTimers();
+    stopSuitTelemetrySimulation();
 
     // Stop any previous microgravity game
     if (microgravityInterval !== null) {
@@ -1471,6 +1615,9 @@ const outpostDays = [
 
 function openOutpostCommand() {
 
+    clearSuitDiagnosticTimers();
+    stopSuitTelemetrySimulation();
+
     const factsLibrary = document.getElementById("factsLibrary");
     if (factsLibrary) factsLibrary.hidden = true;
     const assessmentPanel = document.getElementById("assessmentPanel");
@@ -1947,3 +2094,21 @@ function renderOutpostDay() {
         if (document.hidden) releaseAllTouchControls();
     });
 })();
+
+
+/* Initialise the EVA monitor with empty standby indicators on page load. */
+function initialiseSuitMonitor() {
+    if (
+        document.getElementById("oxygenState") &&
+        document.getElementById("oxygenBar") &&
+        document.getElementById("runDiagnosticsButton")
+    ) {
+        resetSuitDiagnostics();
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialiseSuitMonitor, { once: true });
+} else {
+    initialiseSuitMonitor();
+}
