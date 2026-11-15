@@ -520,3 +520,210 @@ footer { max-width: 1120px; margin: 45px auto 0; padding: 19px 0 25px; border-to
 
 .diagnostic-button-stack { display: flex; flex-direction: column; align-items: flex-end; gap: 9px; }
 @media (max-width: 650px) { .diagnostic-actions { align-items: flex-start; flex-direction: column; } .diagnostic-button-stack { align-items: flex-start; width: 100%; } }
+
+
+/* ASTRA MOBILE SUPPORT — responsive layout and touch gameplay controls */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+img, video, canvas, svg { max-width: 100%; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+
+.mobile-game-controls { display: none; }
+
+@media (max-width: 760px), (pointer: coarse) {
+  .mobile-game-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 10px 0 16px;
+    padding: 12px;
+    border: 1px solid rgba(121, 217, 238, .25);
+    border-radius: 8px;
+    background: linear-gradient(145deg, rgba(12, 31, 49, .96), rgba(5, 17, 30, .96));
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .18);
+  }
+  .touch-key {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid rgba(121, 217, 238, .42);
+    border-radius: 8px;
+    color: #eaf9ff;
+    background: linear-gradient(180deg, rgba(31, 71, 96, .98), rgba(12, 35, 54, .98));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 4px 10px rgba(0,0,0,.2);
+    font: 700 13px var(--mono);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+  }
+  .touch-key:active,
+  .touch-key.is-pressed {
+    color: #061520;
+    background: var(--cyan);
+    border-color: var(--cyan-bright);
+    transform: translateY(1px);
+    box-shadow: 0 0 18px rgba(121, 217, 238, .28);
+  }
+  .touch-dpad {
+    display: grid;
+    grid-template-columns: 48px 48px 48px;
+    grid-template-rows: 46px 46px 46px;
+    gap: 4px;
+    justify-items: center;
+    align-items: center;
+  }
+  .touch-dpad .touch-up { grid-column: 2; grid-row: 1; }
+  .touch-dpad .touch-down { grid-column: 2; grid-row: 3; }
+  .touch-dpad-middle {
+    grid-column: 1 / 4;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .touch-dpad-middle span {
+    min-width: 48px;
+    color: var(--dim);
+    font: 7px var(--mono);
+    text-align: center;
+    letter-spacing: .05em;
+  }
+  .touch-stabilize {
+    flex: 1 1 130px;
+    min-height: 54px;
+    max-width: 190px;
+    color: var(--cyan-bright);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .lunar-touch-controls { justify-content: center; }
+  .lunar-touch-walk {
+    display: flex;
+    flex: 1 1 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+  .lunar-touch-walk .touch-key { flex: 1 1 0; max-width: 170px; }
+  .touch-hop {
+    flex: 1 1 100%;
+    min-height: 54px;
+    color: #211706;
+    border-color: rgba(242, 199, 124, .7);
+    background: linear-gradient(180deg, #f5d99f, #d8a957);
+  }
+  .touch-hop:active, .touch-hop.is-pressed {
+    color: #211706;
+    background: #ffe3ad;
+    border-color: #fff0cb;
+  }
+  .touch-help {
+    flex: 1 1 100%;
+    margin: 0;
+    color: var(--dim);
+    font-size: 9px;
+    line-height: 1.6;
+    text-align: center;
+  }
+}
+
+@media (max-width: 650px) {
+  .navbar {
+    align-items: flex-start;
+    gap: 9px 12px;
+    padding: 12px 14px;
+  }
+  .logo { font-size: 19px; }
+  .live { margin-left: auto; padding-top: 5px; font-size: 8px; }
+  .navbar nav {
+    order: 3;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 18px;
+    width: 100%;
+    padding: 4px 1px 7px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .navbar nav::-webkit-scrollbar { display: none; }
+  .navbar nav a { flex: 0 0 auto; min-height: 34px; display: inline-flex; align-items: center; white-space: nowrap; }
+  main { width: calc(100% - 24px); }
+  .hero { margin: 16px 0 25px; padding: 22px 17px; gap: 19px; }
+  .hero h1 { font-size: clamp(34px, 10vw, 43px); }
+  .description { font-size: 12px; }
+  .hero-info { gap: 8px; }
+  .info-card { min-width: 0; padding: 12px; }
+  .info-card h3 { font-size: 12px; overflow-wrap: anywhere; }
+  .start-btn, .mission-card button { min-height: 46px; max-width: 100%; line-height: 1.5; }
+  .hero-content .start-btn { width: 100%; margin: 4px 0; }
+  .training-panel, .facts-library-panel, .telemetry-panel, .status-section { padding: 16px 14px; margin: 17px 0 25px; }
+  .training-panel > h2 { font-size: 21px; line-height: 1.3; }
+  .module-topline { align-items: flex-start; }
+  .question-text, .facts-intro { font-size: 11px; line-height: 1.75; }
+  .micro-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; font-size: 8px; line-height: 1.5; }
+  .micro-stats span { min-width: 0; overflow-wrap: anywhere; }
+  .micro-stats span:first-child { grid-column: 1 / -1; }
+  .space-playfield, .lunar-playfield {
+    width: 100%;
+    height: clamp(250px, 74vw, 340px);
+    min-height: 250px;
+    margin: 12px 0;
+    border-radius: 7px;
+    touch-action: pan-y;
+  }
+  .space-playfield { background-position: center center; }
+  .lunar-playfield { background-position: center center; }
+  .astronaut.micro-avatar { width: clamp(48px, 15vw, 60px); }
+  .lunar-astronaut.astronaut-avatar { width: clamp(50px, 16vw, 64px); }
+  .research-object { min-width: 39px; max-width: 66px; padding: 6px 5px; font-size: 7px; line-height: 1.35; }
+  .lunar-sample { width: 43px; height: 31px; font-size: 7px; }
+  .physics-note, .image-credit { font-size: 8px; line-height: 1.65; overflow-wrap: anywhere; }
+  #microStartButton, #lunarStartButton { width: 100%; }
+  .mission-report { padding: 16px 13px; }
+  .mission-report .start-btn { width: 100%; }
+  .telemetry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .telemetry-card { padding: 11px 9px; }
+  .telemetry-card h3 { font-size: 8px; line-height: 1.5; }
+  .telemetry-card p { min-height: 0; font-size: 9px; }
+  .diagnostic-actions { padding: 12px; }
+  .diagnostic-button-stack, .diagnostic-button-stack .start-btn { width: 100%; }
+  .mission-grid, .facts-area-tabs, .facts-quiz-options, .assessment-options { grid-template-columns: 1fr; }
+  .mission-card { min-height: 0; }
+  .mission-card button { width: 100%; }
+  .training-records { padding: 14px; }
+  .training-records-grid { grid-template-columns: 1fr 1fr; }
+  .training-records-heading { align-items: flex-start; flex-direction: column; }
+  .answer-grid, .analysis-options, .outpost-choices { grid-template-columns: 1fr; }
+  .answer-btn, .analysis-option, .outpost-choice, .assessment-option, .facts-quiz-option { min-height: 48px; font-size: 12px; }
+  .outpost-resource-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .resource-card { min-width: 0; padding: 11px 9px; }
+  .resource-card strong { font-size: 18px; }
+  .outpost-console { padding: 14px; }
+  .assessment-result { padding: 15px; }
+  footer { margin: 28px 12px 0; padding-bottom: 25px; font-size: 7px; line-height: 1.7; }
+}
+
+@media (max-width: 380px) {
+  .hero-info { grid-template-columns: 1fr; }
+  .hero-info .info-card:last-child { grid-column: auto; }
+  .micro-stats { grid-template-columns: 1fr; }
+  .micro-stats span:first-child { grid-column: auto; }
+  .touch-stabilize { flex-basis: 100%; max-width: none; }
+  .training-records-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  .space-playfield, .lunar-playfield { height: min(68vh, 340px); min-height: 220px; }
+  .mobile-game-controls { justify-content: space-around; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .touch-key { transition: none !important; }
+}

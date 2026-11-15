@@ -45,3 +45,22 @@ After each answer, the learner sees the correct choice and an explanation. The b
 The question bank is in assessments.js. It is based on the user's NASA-sourced ASTRA research brief. NASA has not approved or endorsed ASTRA; mission scores and simulated resource values are educational game mechanics.
 
 To run locally, keep index.html, style.css, script.js, facts.js, assessments.js, README.txt and the assets folder together. Open index.html in a current browser.
+
+
+MOBILE SUPPORT UPDATE
+---------------------
+- Responsive layouts for phone and tablet screens.
+- Navigation can scroll horizontally on narrow screens without widening the page.
+- Microgravity has a touch D-pad and a hold-to-stabilise button.
+- Lunar Operations has press-and-hold left/right controls and a low-gravity hop button.
+- Desktop keyboard controls remain available.
+
+MOBILE CONTROLS
+- Microgravity: touch and hold the directional buttons to apply thrust; hold STABILIZE to reduce drift.
+- Lunar Operations: touch and hold LEFT/RIGHT to walk; tap LOW-G HOP to jump. Samples collect when the astronaut gets close while on the ground.
+
+GITHUB PAGES UPDATE
+- Upload the contents of this folder into your repository's publishing root, replacing same-named files.
+- Upload the full assets folder and preserve its structure.
+- Commit changes, then check the Pages deployment in the Actions tab.
+- Test the public site on a phone after deployment.

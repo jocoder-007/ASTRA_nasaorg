@@ -1877,3 +1877,73 @@ function renderOutpostDay() {
             }
 
         ];
+
+
+/* ASTRA MOBILE TOUCH INPUT
+   Touch buttons feed the same control state as keyboard keys, so the game
+   physics and collection rules remain shared between desktop and mobile. */
+(function initialiseAstraTouchControls() {
+    const touchButtons = document.querySelectorAll('[data-touch-game][data-touch-key]');
+
+    function pressControl(button, event) {
+        event.preventDefault();
+        const game = button.dataset.touchGame;
+        const key = button.dataset.touchKey;
+
+        if (game === 'micro') {
+            if (!microgravityActive) return;
+            microgravityKeys.add(key);
+        } else if (game === 'lunar') {
+            if (!lunarActive) return;
+            if (key === 'hop') {
+                lunarJumpQueued = true;
+            } else {
+                lunarKeys.add(key);
+            }
+        }
+
+        button.classList.add('is-pressed');
+        button.setAttribute('aria-pressed', 'true');
+    }
+
+    function releaseControl(button, event) {
+        if (event) event.preventDefault();
+        const game = button.dataset.touchGame;
+        const key = button.dataset.touchKey;
+
+        if (game === 'micro') microgravityKeys.delete(key);
+        if (game === 'lunar' && key !== 'hop') lunarKeys.delete(key);
+
+        button.classList.remove('is-pressed');
+        button.setAttribute('aria-pressed', 'false');
+    }
+
+    touchButtons.forEach(function (button) {
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('pointerdown', function (event) {
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            pressControl(button, event);
+            try { button.setPointerCapture(event.pointerId); } catch (_) { /* Pointer capture is optional. */ }
+        });
+        button.addEventListener('pointerup', function (event) {
+            releaseControl(button, event);
+            try {
+                if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+            } catch (_) { /* The pointer may already have been released. */ }
+        });
+        button.addEventListener('pointercancel', function (event) { releaseControl(button, event); });
+        button.addEventListener('lostpointercapture', function () { releaseControl(button); });
+        button.addEventListener('contextmenu', function (event) { event.preventDefault(); });
+    });
+
+    function releaseAllTouchControls() {
+        touchButtons.forEach(function (button) {
+            releaseControl(button);
+        });
+    }
+
+    window.addEventListener('blur', releaseAllTouchControls);
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) releaseAllTouchControls();
+    });
+})();

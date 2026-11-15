@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#07111f">
 
     <title>ASTRA | Mission Control</title>
 
@@ -338,7 +339,7 @@
     <h2>Microgravity Equipment Recovery</h2>
 
     <p class="question-text">
-        Recover five research objects inside an orbital laboratory. Apply gentle thrust with W, A, S, D or the arrow keys. The astronaut keeps drifting after you release a key. Hold SPACE to use the stabilisation assist.
+        Recover five research objects inside an orbital laboratory. On a computer, use W, A, S, D or the arrow keys and hold SPACE to stabilise. On a phone, use the touch controls below the scene. The astronaut keeps drifting after thrust stops.
     </p>
 
     <div class="micro-stats">
@@ -384,6 +385,21 @@
              style="left:35%; top:80%;" hidden>RESEARCH</div>
 
     </div>
+
+    <div class="mobile-game-controls microgravity-touch-controls" aria-label="Microgravity touch controls">
+        <div class="touch-dpad" aria-label="Directional thrust pad">
+            <button type="button" class="touch-key touch-up" data-touch-game="micro" data-touch-key="w" aria-label="Thrust up">▲</button>
+            <div class="touch-dpad-middle">
+                <button type="button" class="touch-key" data-touch-game="micro" data-touch-key="a" aria-label="Thrust left">◀</button>
+                <span>THRUST</span>
+                <button type="button" class="touch-key" data-touch-game="micro" data-touch-key="d" aria-label="Thrust right">▶</button>
+            </div>
+            <button type="button" class="touch-key touch-down" data-touch-game="micro" data-touch-key="s" aria-label="Thrust down">▼</button>
+        </div>
+        <button type="button" class="touch-key touch-stabilize" data-touch-game="micro" data-touch-key=" " aria-label="Hold to stabilize drift">HOLD TO STABILIZE</button>
+        <p class="touch-help">Touch and hold a direction to apply thrust. Hold stabilise to reduce drift.</p>
+    </div>
+
     <p class="physics-note">MOVEMENT MODEL: illustrative free-drift physics. This is a simplified game simulation, not a real ISS training system.</p>
     <p class="image-credit">Environment artwork: AI-generated illustrative ISS-style interior, not an actual NASA photograph.</p>
 
@@ -430,7 +446,7 @@
     <h2>ARTEMIS LUNAR EXPEDITION</h2>
 
     <p class="question-text">
-        Walk across the lunar site and recover three geological samples. Use A/D or LEFT/RIGHT to move. Press W, UP or SPACE to perform a controlled low-gravity hop.
+        Walk across the lunar site and recover three geological samples. On a computer, use A/D or LEFT/RIGHT and W/UP/SPACE to hop. On a phone, use the touch controls below the scene.
     </p>
 
     <div class="micro-stats">
@@ -492,6 +508,16 @@
         </div>
 
     </div>
+
+    <div class="mobile-game-controls lunar-touch-controls" aria-label="Lunar operations touch controls">
+        <div class="lunar-touch-walk">
+            <button type="button" class="touch-key" data-touch-game="lunar" data-touch-key="a" aria-label="Walk left">◀ LEFT</button>
+            <button type="button" class="touch-key" data-touch-game="lunar" data-touch-key="d" aria-label="Walk right">RIGHT ▶</button>
+        </div>
+        <button type="button" class="touch-key touch-hop" data-touch-game="lunar" data-touch-key="hop" aria-label="Perform low gravity hop">LOW-G HOP</button>
+        <p class="touch-help">Touch and hold LEFT or RIGHT to walk. Tap LOW-G HOP to jump. Samples are collected when you approach them on the ground.</p>
+    </div>
+
     <p class="physics-note">LUNAR MOVEMENT MODEL: reduced-gravity hops are exaggerated for playability. The Moon's surface gravity is about one-sixth of Earth's; this display is not an engineering simulation.</p>
     <p class="image-credit">Environment artwork: AI-generated illustrative lunar scene, not an actual NASA photograph.</p>
 
