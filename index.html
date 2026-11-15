@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ASTRA | Mission Control</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            ASTRA<span>.</span>
+            <small>SPACE TRAINING SYSTEM</small>
+        </div>
+
+        <nav>
+            <a href="#home">Overview</a>
+            <a href="#missions">Training</a>
+            <a href="#factsLibrary" onclick="openFactsLibrary(); return false;">NASA Facts</a>
+            <a href="#status">Mission Status</a>
+        </nav>
+
+        <div class="live">
+            <span class="live-dot"></span>
+            SYSTEM ONLINE
+        </div>
+
+    </header>
+
+
+    <!-- MAIN WELCOME SECTION -->
+
+    <main id="home">
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="eyebrow">ASTRONAUT TRAINING PROGRAM</p>
+
+                <h1>
+                    YOUR JOURNEY<br>
+                    <span>BEGINS IN SPACE.</span>
+                </h1>
+
+                <p class="description">
+                    Welcome, Astronaut Candidate.
+                    Prepare for your training missions
+                    and explore the science of space.
+                </p>
+
+                <button class="start-btn"
+                    onclick="startTraining()">
+                    INITIALIZE TRAINING →
+                </button>
+
+                <button class="start-btn facts-home-button" type="button" onclick="openFactsLibrary()">
+                    OPEN NASA FACTS LIBRARY →
+                </button>
+
+            </div>
+
+            <div class="hero-info">
+
+                <div class="info-card">
+                    <small>PROGRAM</small>
+                    <h3>ASTRA-01</h3>
+                </div>
+
+                <div class="info-card">
+                    <small>TRAINING LEVEL</small>
+                    <h3>RECRUIT</h3>
+                </div>
+
+                <div class="info-card">
+                    <small>MISSION STATUS</small>
+                    <h3 id="statusText">STANDBY</h3>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REALISTIC-STYLE EVA SUIT TELEMETRY (TRAINING SIMULATION) -->
+        <section class="telemetry-panel" id="suitTelemetry" aria-labelledby="telemetryTitle">
+            <div class="module-topline">
+                <div>
+                    <p class="eyebrow">FLIGHT SYSTEMS / PRE-EVA CHECK</p>
+                    <h2 id="telemetryTitle">EVA SUIT SYSTEMS MONITOR</h2>
+                </div>
+                <p class="mission-count">SIMULATED TELEMETRY</p>
+            </div>
+
+            <p class="telemetry-intro">
+                Review the main systems of an astronaut's spacewalk suit. Run the training diagnostic to verify each system.
+                These are educational status indicators, not readings from real spacecraft equipment.
+            </p>
+
+            <div class="telemetry-grid" aria-live="polite">
+                <article class="telemetry-card">
+                    <div class="telemetry-card-top"><span class="telemetry-icon">O₂</span><span class="telemetry-state" id="oxygenState">STANDBY</span></div>
+                    <h3>OXYGEN SUPPLY</h3>
+                    <p>The PLSS provides breathing oxygen to the astronaut.</p>
+                    <div class="telemetry-track"><span id="oxygenBar" style="width:0%"></span></div>
+                </article>
+
+                <article class="telemetry-card">
+                    <div class="telemetry-card-top"><span class="telemetry-icon">P</span><span class="telemetry-state" id="pressureState">STANDBY</span></div>
+                    <h3>SUIT PRESSURE</h3>
+                    <p>The suit maintains pressure around the astronaut's body.</p>
+                    <div class="telemetry-track"><span id="pressureBar" style="width:0%"></span></div>
+                </article>
+
+                <article class="telemetry-card">
+                    <div class="telemetry-card-top"><span class="telemetry-icon">°C</span><span class="telemetry-state" id="coolingState">STANDBY</span></div>
+                    <h3>COOLING LOOP</h3>
+                    <p>Water circulation through the garment helps remove body heat.</p>
+                    <div class="telemetry-track"><span id="coolingBar" style="width:0%"></span></div>
+                </article>
+
+                <article class="telemetry-card">
+                    <div class="telemetry-card-top"><span class="telemetry-icon">CO₂</span><span class="telemetry-state" id="co2State">STANDBY</span></div>
+                    <h3>CO₂ REMOVAL</h3>
+                    <p>The suit system removes exhaled carbon dioxide from circulating air.</p>
+                    <div class="telemetry-track"><span id="co2Bar" style="width:0%"></span></div>
+                </article>
+
+                <article class="telemetry-card">
+                    <div class="telemetry-card-top"><span class="telemetry-icon">COM</span><span class="telemetry-state" id="commsState">STANDBY</span></div>
+                    <h3>RADIO COMMUNICATION</h3>
+                    <p>Radio equipment supports communication between the astronaut and the team.</p>
+                    <div class="telemetry-track"><span id="commsBar" style="width:0%"></span></div>
+                </article>
+            </div>
+
+            <div class="diagnostic-actions">
+                <div>
+                    <p class="diagnostic-result" id="diagnosticResult" aria-live="polite">SYSTEM CHECK NOT STARTED</p>
+                    <p class="diagnostic-note">Training sequence: five educational system checks.</p>
+                </div>
+                <div class="diagnostic-button-stack">
+                    <button class="start-btn" id="runDiagnosticsButton" type="button" onclick="runSuitDiagnostics()">RUN SUIT DIAGNOSTICS →</button>
+                    <button class="start-btn assessment-launch" id="flightAssessmentButton" type="button" onclick="startTrainingAssessment('flight')" hidden>START 5-QUESTION ASSESSMENT →</button>
+                </div>
+            </div>
+
+            <p class="telemetry-warning">
+                IMPORTANT: A real EVA suit is not a complete radiation shield. Radiation protection requires separate monitoring and mission procedures.
+            </p>
+        </section>
+
+        <!-- TRAINING MISSIONS -->
+
+        <section class="missions" id="missions">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">TRAINING CENTER</p>
+                    <h2>AVAILABLE MISSIONS</h2>
+                </div>
+
+                <p class="mission-count">04 MODULES</p>
+            </div>
+
+
+            <div class="mission-grid">
+
+                <div class="mission-card">
+
+                    <span class="number">01</span>
+
+                    <h3>FLIGHT SYSTEMS</h3>
+
+                    <p>
+                        Complete a pre-EVA systems check, then test your knowledge of spacesuit technology.
+                    </p>
+
+                    <button onclick="openMission('Flight Systems')">
+                        OPEN PRE-EVA CHECK →
+                    </button>
+
+                </div>
+
+
+                <div class="mission-card">
+
+                    <span class="number">02</span>
+
+                    <h3>MICROGRAVITY</h3>
+
+                    <p>
+                        Explore simulated movement
+                        in a microgravity environment.
+                    </p>
+
+                    <button onclick="openMission('Microgravity')">
+                        OPEN MODULE →
+                    </button>
+
+                </div>
+
+
+                <div class="mission-card">
+
+                    <span class="number">03</span>
+
+                    <h3>LUNAR OPERATIONS</h3>
+
+                    <p>
+                        Explore the lunar surface
+                        and conduct scientific research.
+                    </p>
+
+                    <button onclick="openMission('Lunar Operations')">
+                        OPEN MODULE →
+                    </button>
+
+                </div>
+                
+                <div class="mission-card">
+
+                    <span class="number">04</span>
+
+                    <h3>OUTPOST COMMAND</h3>
+
+                    <p>
+                        Manage a lunar research base.
+                        Balance life support, power,
+                        food and radiation protection.
+                    </p>
+
+                    <button onclick="openOutpostCommand()">
+                        ENTER OUTPOST →
+                    </button>
+
+                    </div>
+
+            </div>
+
+            <div class="training-records" id="trainingRecords" aria-live="polite">
+                <div class="training-records-heading">
+                    <div>
+                        <p class="eyebrow">ASTRA TRAINING LOG</p>
+                        <h3>MISSION KNOWLEDGE RECORD</h3>
+                    </div>
+                    <p class="mission-count" id="trainingRecordsSummary">0 / 4 ASSESSMENTS</p>
+                </div>
+                <div class="training-records-grid" id="trainingRecordsList">
+                    <p class="training-records-empty">Complete a module assessment to begin your training record.</p>
+                </div>
+                <p class="training-records-total" id="trainingRecordsTotal">BEST SCORE: 0 / 20</p>
+            </div>
+
+        </section>
+
+        <!-- NASA FACTS LIBRARY: CONTENT FROM THE UPLOADED RESEARCH BRIEF -->
+        <section class="facts-library-panel" id="factsLibrary" hidden>
+            <div class="module-topline">
+                <div>
+                    <p class="eyebrow">ASTRA KNOWLEDGE DATABASE</p>
+                    <h2>NASA FACTS LIBRARY</h2>
+                </div>
+                <p class="mission-count">8 RESEARCH AREAS</p>
+            </div>
+
+            <p class="facts-intro">Explore the research behind ASTRA. Choose a training area to read its facts, open NASA references, and take a short topic quiz.</p>
+
+            <div class="facts-area-tabs" id="factsAreaTabs" aria-label="Choose an ASTRA facts area"></div>
+            <div class="facts-content" id="factsContent"></div>
+
+            <div class="facts-quiz" id="factsQuiz" hidden>
+                <div class="module-topline">
+                    <div>
+                        <p class="eyebrow">KNOWLEDGE CHECK</p>
+                        <h3 id="factsQuizTopic">Topic Quiz</h3>
+                    </div>
+                    <p class="mission-count" id="factsQuizProgress">QUESTION 1 / 2</p>
+                </div>
+                <p class="facts-quiz-question" id="factsQuizQuestion"></p>
+                <div class="facts-quiz-options" id="factsQuizOptions"></div>
+                <p class="facts-quiz-feedback" id="factsQuizFeedback" aria-live="polite"></p>
+                <button class="start-btn" id="factsQuizNext" type="button" onclick="nextAstraFactQuestion()" hidden>NEXT QUESTION →</button>
+            </div>
+
+            <p class="facts-disclaimer">Science facts are summarised from the NASA references listed in the uploaded research brief. ASTRA's scores, timers, resource levels, and event penalties are game simulations—not NASA measurements. NASA has not approved or endorsed ASTRA.</p>
+        </section>
+
+<!-- FLIGHT SYSTEMS TRAINING MODULE -->
+
+<section class="training-panel" id="trainingPanel" hidden>
+
+    <div class="module-topline">
+        <p class="eyebrow">MODULE 01 / FLIGHT SYSTEMS</p>
+        <p class="mission-count" id="questionProgress">
+            QUESTION 1 / 4
+        </p>
+    </div>
+
+    <h2 id="questionTitle">Flight Systems Assessment</h2>
+
+    <p class="question-text" id="questionText">
+        Prepare for your first assessment.
+    </p>
+
+    <div class="answer-grid" id="answerOptions">
+    </div>
+
+    <p class="feedback" id="feedback"></p>
+
+    <button
+        class="start-btn next-btn"
+        id="nextButton"
+        onclick="nextFlightQuestion()"
+        hidden>
+        NEXT QUESTION →
+    </button>
+
+</section>
+
+<!-- MICROGRAVITY TRAINING MODULE -->
+
+<section class="training-panel" id="microgravityPanel" hidden>
+
+    <div class="module-topline">
+        <p class="eyebrow">MODULE 02 / MICROGRAVITY</p>
+        <p class="mission-count" id="microTimer">TIME: 60s</p>
+    </div>
+
+    <h2>Microgravity Equipment Recovery</h2>
+
+    <p class="question-text">
+        Recover five research objects inside an orbital laboratory. Apply gentle thrust with W, A, S, D or the arrow keys. The astronaut keeps drifting after you release a key. Hold SPACE to use the stabilisation assist.
+    </p>
+
+    <div class="micro-stats">
+        <span id="microCollected">OBJECTS: 0 / 5</span>
+        <span id="microStatus">Awaiting mission start...</span>
+        <span id="microVelocity">DRIFT: 0.0 SIM UNITS</span>
+    </div>
+
+    <div class="space-playfield" id="spacePlayfield" tabindex="0">
+
+        
+        
+<img
+            class="astronaut astronaut-avatar micro-avatar"
+            id="astronaut"
+            src="assets/astra-eva-astronaut.png"
+            alt="Astronaut wearing a detailed extravehicular activity suit"
+            draggable="false">
+
+
+        <div class="station-window" aria-hidden="true"><div class="station-earth"></div></div>
+        <div class="station-handrail rail-one" aria-hidden="true"></div>
+        <div class="station-handrail rail-two" aria-hidden="true"></div>
+
+        <div class="research-object"
+             id="object1"
+             style="left:18%; top:25%;" hidden>DATA</div>
+
+        <div class="research-object"
+             id="object2"
+             style="left:75%; top:20%;" hidden>TOOL</div>
+
+        <div class="research-object"
+             id="object3"
+             style="left:55%; top:65%;" hidden>SAMPLE</div>
+
+        <div class="research-object"
+             id="object4"
+             style="left:85%; top:75%;" hidden>DEVICE</div>
+
+        <div class="research-object"
+             id="object5"
+             style="left:35%; top:80%;" hidden>RESEARCH</div>
+
+    </div>
+    <p class="physics-note">MOVEMENT MODEL: illustrative free-drift physics. This is a simplified game simulation, not a real ISS training system.</p>
+    <p class="image-credit">Environment artwork: AI-generated illustrative ISS-style interior, not an actual NASA photograph.</p>
+
+    <button class="start-btn"
+            id="microStartButton"
+            onclick="startMicrogravity()">
+
+        START SIMULATION →
+
+    </button>
+
+
+<!-- PASTE MISSION REPORT HERE -->
+
+<div class="mission-report" id="microReport" hidden>
+
+    <p class="eyebrow">MISSION DEBRIEF</p>
+
+    <h3 id="reportTitle">MISSION COMPLETE</h3>
+
+    <h2 id="reportScore">SCORE: 100 / 100</h2>
+
+    <p id="reportDetails">
+        All research objects recovered successfully.
+    </p>
+
+    <button class="start-btn assessment-launch" id="microAssessmentButton" type="button" onclick="startTrainingAssessment('microgravity')" hidden>
+        START 5-QUESTION KNOWLEDGE ASSESSMENT →
+    </button>
+
+</div>
+
+</section>
+
+<!-- LUNAR OPERATIONS MODULE -->
+
+<section class="training-panel" id="lunarPanel" hidden>
+
+    <div class="module-topline">
+        <p class="eyebrow">MODULE 03 / LUNAR OPERATIONS</p>
+        <p id="lunarTimer" class="mission-count">TIME: 90s</p>
+    </div>
+
+    <h2>ARTEMIS LUNAR EXPEDITION</h2>
+
+    <p class="question-text">
+        Walk across the lunar site and recover three geological samples. Use A/D or LEFT/RIGHT to move. Press W, UP or SPACE to perform a controlled low-gravity hop.
+    </p>
+
+    <div class="micro-stats">
+        <span id="lunarCollected">SAMPLES: 0 / 3</span>
+        <span id="lunarStatus">AWAITING MISSION START</span>
+        <span id="lunarMovementStatus">GROUND CONTACT</span>
+    </div>
+
+    <!-- LUNAR ENVIRONMENT -->
+
+    <div class="lunar-playfield" id="lunarPlayfield" tabindex="0">
+
+        <div class="earth-orb"></div>
+
+        <div class="lunar-stars"></div>
+
+        <div class="lunar-mountain mountain-one"></div>
+        <div class="lunar-mountain mountain-two"></div>
+
+        <!-- LUNAR LANDER -->
+
+        <div class="lunar-lander">
+            <div class="lander-body"></div>
+            <div class="lander-leg left"></div>
+            <div class="lander-leg right"></div>
+        </div>
+
+        <!-- LUNAR CRATERS -->
+
+        <div class="lunar-crater crater-one"></div>
+        <div class="lunar-crater crater-two"></div>
+        <div class="lunar-crater crater-three"></div>
+
+        <!-- MOON SURFACE -->
+
+        <div class="lunar-ground"></div>
+
+        <!-- ASTRONAUT -->
+
+        <img
+            class="lunar-astronaut astronaut-avatar lunar-avatar"
+            id="lunarAstronaut"
+            src="assets/astra-eva-astronaut.png"
+            alt="Astronaut wearing a lunar exploration suit"
+            draggable="false">
+
+        <!-- SCIENCE SAMPLES -->
+
+        <div class="lunar-sample sample-one" id="lunarSample1">
+            <span>SAMPLE A</span>
+        </div>
+
+        <div class="lunar-sample sample-two" id="lunarSample2">
+            <span>SAMPLE B</span>
+        </div>
+
+        <div class="lunar-sample sample-three" id="lunarSample3">
+            <span>SAMPLE C</span>
+        </div>
+
+    </div>
+    <p class="physics-note">LUNAR MOVEMENT MODEL: reduced-gravity hops are exaggerated for playability. The Moon's surface gravity is about one-sixth of Earth's; this display is not an engineering simulation.</p>
+    <p class="image-credit">Environment artwork: AI-generated illustrative lunar scene, not an actual NASA photograph.</p>
+
+    <button class="start-btn"
+            id="lunarStartButton"
+            onclick="startLunarMission()">
+        BEGIN LUNAR EXPEDITION →
+    </button>
+
+<!-- Five-question Lunar Operations assessment is shown after successful sample recovery. -->
+
+    <div class="mission-report" id="lunarReport" hidden>
+
+        <p class="eyebrow">LUNAR MISSION DEBRIEF</p>
+
+        <h3 id="lunarReportTitle">MISSION COMPLETE</h3>
+
+        <h2 id="lunarReportScore">SCORE: 100 / 100</h2>
+
+        <p id="lunarReportDetails"></p>
+
+        <button class="start-btn assessment-launch" id="lunarAssessmentButton" type="button" onclick="startTrainingAssessment('lunar')" hidden>
+            START 5-QUESTION KNOWLEDGE ASSESSMENT →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ASTRA OUTPOST COMMAND -->
+
+<section class="training-panel outpost-panel"
+         id="outpostPanel" hidden>
+
+    <div class="module-topline">
+        <p class="eyebrow">ASTRA / OUTPOST COMMAND</p>
+        <p class="mission-count">LUNAR BASE ALPHA</p>
+    </div>
+
+    <h2>OUTPOST MANAGEMENT SYSTEM</h2>
+
+    <p class="question-text">
+        Commander, maintain the lunar research base
+        for five mission days. Your decisions affect
+        the survival and operation of the outpost.
+    </p>
+
+    <button class="start-btn"
+            id="outpostStartButton"
+            onclick="startOutpostMission()">
+        START 5-DAY SIMULATION →
+    </button>
+
+    <div id="outpostGame" hidden>
+
+        <!-- RESOURCE MONITOR -->
+
+        <h3 class="outpost-heading">OUTPOST RESOURCE MONITOR</h3>
+
+        <p class="outpost-note">
+            Resource levels are simplified training units (0–100).
+        </p>
+
+        <div class="outpost-resource-grid">
+
+            <div class="resource-card">
+                <span>OXYGEN</span>
+                <strong id="outpostOxygenValue">80</strong>
+                <div class="resource-track">
+                    <div class="resource-fill" id="outpostOxygenBar"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <span>WATER</span>
+                <strong id="outpostWaterValue">76</strong>
+                <div class="resource-track">
+                    <div class="resource-fill" id="outpostWaterBar"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <span>POWER</span>
+                <strong id="outpostPowerValue">75</strong>
+                <div class="resource-track">
+                    <div class="resource-fill" id="outpostPowerBar"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <span>FOOD</span>
+                <strong id="outpostFoodValue">72</strong>
+                <div class="resource-track">
+                    <div class="resource-fill" id="outpostFoodBar"></div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <span>RADIATION SHIELDING</span>
+                <strong id="outpostShieldValue">68</strong>
+                <div class="resource-track">
+                    <div class="resource-fill" id="outpostShieldBar"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DAILY MISSION -->
+
+        <div class="outpost-console">
+
+            <p class="eyebrow" id="outpostDayLabel">
+                MISSION DAY 01 / 05
+            </p>
+
+            <h3 id="outpostDayTitle">
+                Initial Power Allocation
+            </h3>
+
+            <p id="outpostScenario" class="question-text">
+                Your first decision awaits.
+            </p>
+
+            <div class="outpost-choices" id="outpostChoices">
+            </div>
+
+                <p id="outpostFeedback" class="outpost-feedback"></p>
+
+                <div class="outpost-event" id="outpostEvent" hidden>
+
+                    <p class="eyebrow">UNEXPECTED EVENT DETECTED</p>
+
+                    <h3 id="outpostEventTitle"></h3>
+
+                    <p id="outpostEventDescription"></p>
+
+                </div>
+
+
+                
+
+
+            
+            
+
+            <button class="start-btn"
+                    id="outpostContinue"
+                    onclick="continueOutpostDay()"
+                    hidden>
+                NEXT MISSION DAY →
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- FINAL REPORT -->
+
+    <div class="outpost-report" id="outpostReport" hidden>
+
+        <p class="eyebrow">COMMANDER'S MISSION DEBRIEF</p>
+
+        <h2 id="outpostResultTitle">OUTPOST REPORT</h2>
+
+        <h3 id="outpostFinalScore">SCORE: 0 / 100</h3>
+
+        <p id="outpostResultDetails"></p>
+
+        <button class="start-btn assessment-launch" id="outpostAssessmentButton" type="button" onclick="startTrainingAssessment('outpost')" hidden>
+            START 5-QUESTION KNOWLEDGE ASSESSMENT →
+        </button>
+
+        <button class="start-btn"
+                onclick="startOutpostMission()">
+            START NEW SIMULATION →
+        </button>
+
+    </div>
+
+</section>
+
+<!-- SHARED POST-MISSION KNOWLEDGE ASSESSMENT -->
+<section class="training-panel assessment-panel" id="assessmentPanel" hidden aria-labelledby="assessmentTitle">
+    <div class="module-topline">
+        <div>
+            <p class="eyebrow">ASTRA / MISSION KNOWLEDGE ASSESSMENT</p>
+            <h2 id="assessmentTitle">Training Assessment</h2>
+        </div>
+        <p class="mission-count" id="assessmentProgress">QUESTION 1 / 5</p>
+    </div>
+
+    <p class="assessment-source-note" id="assessmentSourceNote">Questions are based on the ASTRA NASA-sourced research brief. See the NASA Facts Library for references.</p>
+
+    <div id="assessmentQuestionBlock">
+        <p class="assessment-question" id="assessmentQuestion"></p>
+        <div class="assessment-options" id="assessmentOptions"></div>
+        <p class="assessment-feedback" id="assessmentFeedback" aria-live="polite"></p>
+        <button class="start-btn" id="assessmentNextButton" type="button" onclick="nextTrainingAssessmentQuestion()" hidden>NEXT QUESTION →</button>
+    </div>
+
+    <div class="assessment-result" id="assessmentResult" hidden>
+        <p class="eyebrow">ASSESSMENT REPORT</p>
+        <h3 id="assessmentResultTitle">ASSESSMENT COMPLETE</h3>
+        <h2 id="assessmentResultScore">SCORE: 0 / 5</h2>
+        <p id="assessmentResultDetails"></p>
+        <p class="assessment-record-note" id="assessmentRecordNote">Your best score is saved in this browser on this device.</p>
+        <button class="start-btn" type="button" id="assessmentReturnButton" onclick="returnToTrainingCenter()">RETURN TO TRAINING CENTER →</button>
+    </div>
+</section>
+
+        <!-- MISSION STATUS -->
+
+        <section class="status-section" id="status">
+
+            <p class="eyebrow">MISSION CONTROL MESSAGE</p>
+
+            <h2 id="missionMessage">
+                Awaiting astronaut authorization...
+            </h2>
+
+            <p>
+                Select a training module to begin your journey.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        ASTRA © 2026 | EDUCATIONAL SPACE SIMULATION
+    </footer>
+
+
+    <script src="script.js"></script>
+    <script src="facts.js"></script>
+    <script src="assessments.js"></script>
+
+</body>
+
+</html>
